@@ -1,4 +1,5 @@
 var FIND_ALL = "FIND_ALL";
+var linkBreakRegex = new RegExp("・", "g");
 
 function search() {
     var searchOptions = getSearchOptions();
@@ -43,19 +44,20 @@ function renderResultSet(resultSet, searchOptions) {
         return;
     }
 
-    var table = "<table><tr><th>Grammar Point</th><th>Details</th></tr>";
+    var table = "<table><tr><th>Nr.</th><th>Grammar Point</th><th>Details</th></tr>";
     $(resultSet).each(function (index, result) {
         table += "" +
             "<tr>" +
+            "   <td><a class='link' target='_blank' href='" + pageBaseUrl + result.fln + ".md'>"+result.fln+"</a></td>" +
             "   <td class='first-column'>" +
-            "       <a class='link' target='_blank' href='" + pageBaseUrl + result.fln + ".md'>" + result.fln + "." + result.itm + "</a>" +
+            "       " + createLinkText(result) + "" +
             "   </td>" +
-            "   <td>" +
+            "   <td class='details'>" +
             "       <ul>";
 
-        table += result.sum ? "<li>" + result.sum + "</li>" : "";
-        table += result.eqv ? "<li>" + result.eqv + "</li>" : "";
-        table += result.pos ? "<li>" + result.pos + "</li>" : "";
+        table += result.sum ? "<li>Summary: " + result.sum + "</li>" : "";
+        table += result.eqv ? "<li>Equivalent: " + result.eqv + "</li>" : "";
+        table += result.pos ? "<li>Parts of speech: " + result.pos + "</li>" : "";
 
         table += "  </ul>" +
             "   </td>" +
@@ -64,6 +66,12 @@ function renderResultSet(resultSet, searchOptions) {
     table += "<table>";
 
     element.html(table);
+}
+
+function createLinkText(item) {
+    var link = item.itm.replace(linkBreakRegex, "<br>");
+
+    return link;
 }
 
 function addToResultSet(item, resultSet, searchTerm) {
