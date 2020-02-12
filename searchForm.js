@@ -48,7 +48,7 @@ function renderResultSet(resultSet, searchOptions) {
         table += "" +
             "<tr>" +
             "   <td class='first-column'>" +
-            "       <a class='link' href='" + pageBaseUrl + result.fln + ".md'>" + result.fln + "." + result.itm + "</a>" +
+            "       <a class='link' target='_blank' href='" + pageBaseUrl + result.fln + ".md'>" + result.fln + "." + result.itm + "</a>" +
             "   </td>" +
             "   <td>" +
             "       <ul>";
