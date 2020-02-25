@@ -57,7 +57,7 @@ function modifyExternalSearchLinks() {
 }
 
 function updateSingleGrammarLink(searchTerm, linkText, url) {
-    return "<a target='_blank' href='" + url + searchTerm + "'>" + linkText + " -> " + searchTerm + "</a><br>";
+    return "<div class='search-link'><a target='_blank' href='" + url + searchTerm + "'>" + linkText + " -> " + searchTerm + "</a><br></div>";
 }
 
 function renderResultSet(resultSet, searchOptions) {
