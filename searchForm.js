@@ -1,8 +1,9 @@
 var FIND_ALL = "FIND_ALL";
 var linkBreakRegex = new RegExp("・", "g");
 var searchInputField = $('#search-field');
-var githubLink = $('#github-link');
-var stackExchangeLink = $('#stackexchange-link');
+// var githubLink = $('#github-link'); todo delete
+// var stackExchangeLink = $('#stackexchange-link');
+// var googleLink = $('#google-link');
 
 function search() {
     var searchOptions = getSearchOptions();
@@ -31,11 +32,32 @@ function search() {
     renderResultSet(resultSet, searchOptions);
 }
 
+// todo delete
+// function modifyExternalSearchLinks() {
+//     var searchTerm = searchInputField.val();
+//     if(searchTerm) {
+//         githubLink.attr("href", "https://github.com/jihadichan/jp/search?l=Markdown&q=" + searchTerm.trim());
+//         stackExchangeLink.attr("href", "https://japanese.stackexchange.com/search?q=" + searchTerm.trim());
+//         googleLink.attr("href", "https://www.google.com/search?q=grammar+" + searchTerm.trim());
+//     }
+// }
+
 function modifyExternalSearchLinks() {
     var searchTerm = searchInputField.val();
+    var searchLinks = $('#search-links');
+    if (searchTerm) {
+        var links = "";
+        links += updateSingleGrammarLink(searchTerm, "GitHub Search", "https://github.com/jihadichan/jp/search?l=Markdown&q=");
+        links += updateSingleGrammarLink(searchTerm, "StaEx Search", "https://japanese.stackexchange.com/search?q=");
+        links += updateSingleGrammarLink(searchTerm, "Google Search", "https://www.google.com/search?q=grammar+");
+        searchLinks.html(links);
+    }　else {
+        searchLinks.html("");
+    }
+}
 
-    githubLink.attr("href", "https://github.com/jihadichan/jp/search?l=Markdown&q=" + searchTerm.trim());
-    stackExchangeLink.attr("href", "https://japanese.stackexchange.com/search?q=" + searchTerm.trim());
+function updateSingleGrammarLink(searchTerm, linkText, url) {
+    return "<a target='_blank' href='" + url + searchTerm + "'>" + linkText + " -> " + searchTerm + "</a><br>";
 }
 
 function renderResultSet(resultSet, searchOptions) {
