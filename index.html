@@ -37,10 +37,25 @@
         #search-button {
             margin-left: 10px;
             width: 70px;
-            height: 41px;
+            height: 43px;
             position: relative;
-            bottom: 2px;
+            bottom: 3px;
         }
+
+        .github-link-container {
+            text-align: center;
+            float: right;
+        }
+
+        .github-link-container a {
+            color: black;
+            font-size: 0.9em;
+        }
+
+        .search-button-container {
+            float: right;
+        }
+
 
         .hint {
             font-size: 0.8em;
@@ -120,7 +135,7 @@
         <div class="search-inputs">
             <label>
                 <span class="hint">Hint: An empty search shows all grammar points</span>
-                <input type="text" id="search-field" placeholder=" Search..."/>
+                <input type="text" id="search-field" placeholder=" Search..." onkeyup="modifyExternalSearchLinks()"/>
                 <input type="button" id='search-button' onclick="search()" value="Search">
             </label>
             <div class="options">
@@ -142,6 +157,8 @@
             </div>
         </div>
         <div id="result-size"></div>
+        <div class="github-link-container"><a id="github-link" target="_blank">GitHub Search</a></div><br>
+        <div class="github-link-container"><a id="stackexchange-link" target="_blank">StackExchange Search</a></div>
     </div>
     <div id="result-set-container"></div>
 </div>

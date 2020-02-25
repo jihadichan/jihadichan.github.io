@@ -1,5 +1,8 @@
 var FIND_ALL = "FIND_ALL";
 var linkBreakRegex = new RegExp("・", "g");
+var searchInputField = $('#search-field');
+var githubLink = $('#github-link');
+var stackExchangeLink = $('#stackexchange-link');
 
 function search() {
     var searchOptions = getSearchOptions();
@@ -16,24 +19,27 @@ function search() {
         var doc = createDocument(item, searchOptions);
         if (doc.gammarPoint) {
             if (contains(searchOptions.regex, searchTerm, doc.gammarPoint)) {
-                // console.log("Found in doc.gammarPoint");
                 addToResultSet(item, resultSet, searchTerm);
                 continue;
             }
         }
         if (contains(searchOptions.regex, searchTerm, doc.text)) {
-            // console.log("Found in doc.text");
             addToResultSet(item, resultSet, searchTerm);
         }
     }
-    console.log("resultSet", resultSet);
-    console.log("searchTerm: ", searchTerm);
-    console.log("searchOptions: ", searchOptions);
+
     renderResultSet(resultSet, searchOptions);
 }
 
+function modifyExternalSearchLinks() {
+    var searchTerm = searchInputField.val();
+
+    githubLink.attr("href", "https://github.com/jihadichan/jp/search?l=Markdown&q=" + searchTerm.trim());
+    stackExchangeLink.attr("href", "https://japanese.stackexchange.com/search?q=" + searchTerm.trim());
+}
+
 function renderResultSet(resultSet, searchOptions) {
-    $('#result-size').html("Results: " + resultSet.length)
+    $('#result-size').html("Results: " + resultSet.length);
 
     var element = $('#result-set-container');
     if (resultSet.length <= 0) {
@@ -48,7 +54,7 @@ function renderResultSet(resultSet, searchOptions) {
     $(resultSet).each(function (index, result) {
         table += "" +
             "<tr>" +
-            "   <td><a class='link' target='_blank' href='" + pageBaseUrl + result.fln + ".md'>"+result.fln+"</a></td>" +
+            "   <td><a class='link' target='_blank' href='" + pageBaseUrl + result.fln + ".md'>" + result.fln + "</a></td>" +
             "   <td class='first-column'>" +
             "       " + createLinkText(result) + "" +
             "   </td>" +
@@ -69,9 +75,7 @@ function renderResultSet(resultSet, searchOptions) {
 }
 
 function createLinkText(item) {
-    var link = item.itm.replace(linkBreakRegex, "<br>");
-
-    return link;
+    return item.itm.replace(linkBreakRegex, "<br>");
 }
 
 function addToResultSet(item, resultSet, searchTerm) {
@@ -89,10 +93,7 @@ function addToResultSet(item, resultSet, searchTerm) {
 function addHighlight(text, searchTerm) {
 
     if (!(searchTerm instanceof RegExp)) {
-        console.log("CONVERTING TO REGEX - searchTerm: " + searchTerm);
         searchTerm = new RegExp(searchTerm, "gi");
-    } else {
-        console.log("Already regex - searchTerm: " + searchTerm);
     }
 
     var match = text.match(searchTerm);
@@ -110,7 +111,6 @@ function contains(shouldUseRegex, term, text) {
     if (shouldUseRegex) {
         return text.match(term) != null;
     } else {
-        // console.log("text.indexOf(term).length　woth term: " + term + " on text: "+text, text.indexOf(term));
         return text.indexOf(term) !== -1;
     }
 }
@@ -139,7 +139,7 @@ function createDocument(item, searchOptions) {
 }
 
 function getSearchOptions() {
-    var searchField = $('#search-field').val();
+    var searchField = searchInputField.val();
     return {
         term: searchField === "" ? FIND_ALL : searchField.toLowerCase(),
         grammarPoint: $('#grammar-point').is(':checked'),
@@ -161,9 +161,28 @@ function delayed(callback, ms) {
     };
 }
 
+function getUrlParams() {
+    var params = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+        params[key] = value;
+    });
+    return params;
+}
+
+function fillSearchFieldFromParams() {
+    var params = getUrlParams();
+    if (params.q) {
+        searchInputField.val(decodeURIComponent(params.q));
+        search();
+        modifyExternalSearchLinks();
+    }
+}
+
 // delayed(search, 300) - instant search is shit　with IME. Not much use in practice.
-$('#search-field').keypress(function (e) {
+searchInputField.keypress(function (e) {
     if (e.keyCode === 13) {
         search();
     }
 });
+
+fillSearchFieldFromParams();
