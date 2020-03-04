@@ -32,16 +32,6 @@ function search() {
     renderResultSet(resultSet, searchOptions);
 }
 
-// todo delete
-// function modifyExternalSearchLinks() {
-//     var searchTerm = searchInputField.val();
-//     if(searchTerm) {
-//         githubLink.attr("href", "https://github.com/jihadichan/jp/search?l=Markdown&q=" + searchTerm.trim());
-//         stackExchangeLink.attr("href", "https://japanese.stackexchange.com/search?q=" + searchTerm.trim());
-//         googleLink.attr("href", "https://www.google.com/search?q=grammar+" + searchTerm.trim());
-//     }
-// }
-
 function modifyExternalSearchLinks() {
     var searchTerm = searchInputField.val();
     var searchLinks = $('#search-links');
@@ -50,6 +40,7 @@ function modifyExternalSearchLinks() {
         links += updateSingleGrammarLink(searchTerm, "GitHub Search", "https://github.com/jihadichan/jp/search?l=Markdown&q=");
         links += updateSingleGrammarLink(searchTerm, "StaEx Search", "https://japanese.stackexchange.com/search?q=");
         links += updateSingleGrammarLink(searchTerm, "Google Search", "https://www.google.com/search?q=grammar+");
+        links += updateSingleGrammarLinkTatobea(searchTerm, "Tatobea Search");
         searchLinks.html(links);
     }　else {
         searchLinks.html("");
@@ -58,6 +49,10 @@ function modifyExternalSearchLinks() {
 
 function updateSingleGrammarLink(searchTerm, linkText, url) {
     return "<div class='search-link'><a target='_blank' href='" + url + searchTerm + "'>" + linkText + " -> " + searchTerm + "</a><br></div>";
+}
+
+function updateSingleGrammarLinkTatobea(searchTerm, linkText) {
+    return "<div class='search-link'><a target='_blank' href='https://tatoeba.org/eng/sentences/search?query=%22"  + searchTerm + "%22&from=jpn&to=eng'>" + linkText + " -> " + searchTerm + "</a><br></div>";
 }
 
 function renderResultSet(resultSet, searchOptions) {
