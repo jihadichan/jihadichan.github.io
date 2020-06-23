@@ -45,3 +45,28 @@ function reset() {
     $('#notes').val("");
     $('#source').val("");
 }
+
+document.addEventListener('paste', function (e) {
+    var pasteData = (e.originalEvent || e).clipboardData.getData('text/plain');
+    try {
+        var obj = JSON.parse(pasteData);
+        console.log("Object from clipboard: ", obj);
+
+        if (obj.japanese) {
+            $('#sentence').val(obj.japanese);
+        }
+        var notes = "";
+        if (obj.english) {
+            notes += obj.english;
+        }
+        if (obj.hiragana) {
+            notes += "\n- "+obj.hiragana;
+        }
+        if (notes !== "") {
+            $('#notes').val(notes);
+        }
+
+    } catch (exception) {
+        console.log("No suitable object recognized");
+    }
+});
