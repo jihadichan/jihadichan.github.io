@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paste Sentences</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+        .search-container {
+            width: 850px;
+            border: 1px solid #999;
+            margin: 50px auto 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .sentence-field {
+            width: 100%;
+            height: 30px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .notes-field {
+            margin-top: 10px;
+            width: 100%;
+            height: 150px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .source-field {
+            margin-top: 10px;
+            width: 100%;
+            height: 60px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .search-inputs {
+            margin: 0 auto;
+            display: inline;
+        }
+
+        button {
+            margin: 10px;
+            height: 43px;
+            bottom: 3px;
+        }
+
+        #search-links {
+            margin-top: 10px;
+        }
+
+        #search-links a {
+            color: black;
+            font-size: 0.9em;
+        }
+
+        .search-link {
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        .search-button-container {
+            float: right;
+        }
+
+
+        .hint {
+            font-size: 0.8em;
+            color: #999999;
+        }
+
+        .options {
+            margin-top: 7px;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 1.2em;
+            color: red;
+        }
+
+        .json {
+
+        }
+
+        .json pre {
+            margin: 0 auto;
+            width: 300px;
+            background-color: #eee;
+        }
+
+        #result-size {
+            margin-top: 10px;
+            font-weight: bold;
+            float: right;
+        }
+
+        #result-set-container {
+            margin: 0 auto;
+            width: 800px;
+        }
+
+        #result-set-container table {
+            border-collapse: collapse;
+            width: 800px;
+        }
+
+        #result-set-container td {
+            border: 1px solid #c6cbd1;
+            padding: 10px;
+        }
+
+        .first-column {
+            white-space: nowrap;
+            font-size: 1.1em;
+        }
+
+        .first-column a {
+            font-size: 1em;
+        }
+
+        .details {
+            font-size: 0.9em;
+        }
+
+        #result-set-container tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+
+        .hl {
+            background-color: rgba(255, 190, 43, 0.3);
+        }
+
+        .link {
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="search-container">
+        <div class="search-inputs">
+            <label>
+                <input id="sentence" type="text" class="sentence-field" placeholder="Japanese"/>
+            </label><br>
+            <label>
+                <textarea id="notes" class="notes-field" placeholder="Notes"></textarea>
+            </label><br>
+            <label>
+                <textarea id="source" class="source-field" placeholder="Source"></textarea>
+            </label>
+            <button onclick="toCsvRow()" style="float: left">Copy</button>
+            <button onclick="reset()" style="float: right">Reset</button><br><br>
+            <input type="hidden" id="copy-field" />
+        </div>
+    </div>
+    <div id="result-set-container"></div>
+</div>
+<script src="jquery-3.4.1.min.js" type="application/javascript"></script>
+<script src="paste-sentences.js" type="application/javascript"></script>
+</body>
+</html>
