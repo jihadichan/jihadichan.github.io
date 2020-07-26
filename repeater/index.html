@@ -85,6 +85,12 @@
         color: #ddd;
         font-size: 0.8em;
     }
+
+    #loop {
+        font-weight: bold;
+        color: darkred;
+        float: right;
+    }
 </style>
 <body>
 
@@ -116,10 +122,12 @@
         <div id="english"></div>
     </div>
 
-     <div class="help">
-         Space: play/stop, Left / Right: back/forth, Down: repeat, E: toggle English<br>
-         Find index: search("JP / EN") in console
-     </div>
+    <div class="help">
+        Space: play/stop, Left / Right: back/forth, Down: repeat, Up: loop, E: toggle English
+        <div id="loop" style="display: none">LOOP</div>
+        <br>
+        Find index: search("JP / EN") in console
+    </div>
 </div>
 
 <script src="meknow-data.js" type="application/javascript"></script>
