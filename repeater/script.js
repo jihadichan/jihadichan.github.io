@@ -76,10 +76,7 @@ function nextSentence(addition) {
     }
 
     addToPlayDataIndex(addition);
-    console.log("playDataIndex", playDataIndex)
-    console.log("playData", playData)
     if (playDataIndex === playData.length) {
-        console.log("max!")
         playDataIndex = 0;
         isSessionRunning = false;
         run();
@@ -87,7 +84,6 @@ function nextSentence(addition) {
     }
 
     var sentence = playData[playDataIndex];
-    console.log("index: ", sentence.index)
     current.text(sentence.index);
     japanese.text(sentence.japanese)
     english.text(sentence.english);
@@ -98,7 +94,6 @@ function nextSentence(addition) {
 
 function addToPlayDataIndex(addition) {
     var result = playDataIndex + addition;
-    console.log(result)
     if (result < 0 || result >= sentences.length - 1) {
         return;
     }
@@ -172,7 +167,6 @@ function search(term) {
 
 function toggleLoop() {
     isInLoop = !isInLoop;
-    console.log("loop? ", isInLoop)
 }
 
 function disableLoop() {
