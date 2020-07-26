@@ -24,7 +24,7 @@ function startStop() {
 }
 
 function stop() {
-    if(playingAudio) {
+    if (playingAudio) {
         playingAudio.pause();
         playingAudio.currentTime = 0;
     }
@@ -35,6 +35,7 @@ function decrementPlayDataIndex() {
         playDataIndex--;
     }
 }
+
 function incrementPlayDataIndex() {
     if (playDataIndex >= getTo()) {
         playDataIndex++;
@@ -45,23 +46,30 @@ function reset() {
     isSessionRunning = false;
     playButton.prop("checked", false);
     stop();
-    if(from.val().trim() === "") {
+    if (from.val().trim() === "") {
         from.val("0");
     }
-    if(to.val().trim() === "") {
+    if (to.val().trim() === "") {
         to.val(getMaxIndex());
     }
 }
 
 function run() {
     // Set up
-    var localCurrent = from.val();
+    var localCurrent = parseInt(from.val());
+    if (getTo() - localCurrent > 500) {
+        to.val(localCurrent + 500);
+    }
 
     // Create audio array to play
     playData = [];
     $(sentences.slice(localCurrent, getTo())).each(function (index, sentence) {
-        sentence.audio = new Audio("meknow/" + sentence.fileName);
-        playData.push(sentence);
+        try {
+            sentence.audio = new Audio("meknow/" + sentence.fileName);
+            playData.push(sentence);
+        } catch (e) {
+            console.log("At index " + sentence.index + " - Failed to load " + sentence.fileName)
+        }
     })
     playDataIndex = -1;
     isSessionRunning = true;
@@ -118,7 +126,7 @@ function getMaxIndex() {
 }
 
 function getTo() {
-    if(parseInt(from.val()) > parseInt(to.val())) {
+    if (parseInt(from.val()) > parseInt(to.val())) {
         to.val(from.val());
     }
     return parseInt(to.val()) + 1;
@@ -135,7 +143,7 @@ function search(term) {
     console.log(JSON.stringify(resultSet, null, '\t'));
 }
 
-document.onkeyup = function(e) {
+document.onkeyup = function (e) {
     if (e.code === "Space") {
         if (playButton.is(':checked')) {
             playButton.prop("checked", false);
@@ -145,14 +153,14 @@ document.onkeyup = function(e) {
         startStop();
     }
     if (e.code === "ArrowDown") {
-        if(isSessionRunning) {
+        if (isSessionRunning) {
             decrementPlayDataIndex();
             stop();
             nextSentence();
         }
     }
     if (e.code === "ArrowLeft") {
-        if(isSessionRunning) {
+        if (isSessionRunning) {
             decrementPlayDataIndex();
             decrementPlayDataIndex();
             stop();
@@ -160,7 +168,7 @@ document.onkeyup = function(e) {
         }
     }
     if (e.code === "ArrowRight") {
-        if(isSessionRunning) {
+        if (isSessionRunning) {
             incrementPlayDataIndex();
             stop();
             nextSentence();

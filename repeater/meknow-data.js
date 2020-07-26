@@ -5394,12 +5394,6 @@ var sentences = [
         "fileName": "1581014232352-画面の左側を見てください.mp3"
     },
     {
-        "index": 899,
-        "japanese": "日本では車は道の左側を走ります。",
-        "english": "In Japan they drive on the left side of the street.",
-        "fileName": "djt/1581259219422-日本では車は道の左側を走ります.mp3"
-    },
-    {
         "index": 900,
         "japanese": "彼女はいつも私の右側を歩きます。",
         "english": "She always walks on my right.",
@@ -7378,12 +7372,6 @@ var sentences = [
         "japanese": "カラーコピーは一枚いくらですか。",
         "english": "How much is a color copy?",
         "fileName": "1581014232366-カラーコピーは一枚いくらですか.mp3"
-    },
-    {
-        "index": 1230,
-        "japanese": "よろしくお願いします。",
-        "english": "My best regards.",
-        "fileName": "taekim/1581266292580-よろしくお願いします.mp3"
     },
     {
         "index": 1231,
@@ -12502,12 +12490,6 @@ var sentences = [
         "japanese": "塩を少々入れてください。",
         "english": "Please put in a little salt.",
         "fileName": "1581014797449-塩を少々入れてください.mp3"
-    },
-    {
-        "index": 2084,
-        "japanese": "少々お待ちください。",
-        "english": "Please wait a moment.",
-        "fileName": "taekim/1581266292580-少々お待ちください.mp3"
     },
     {
         "index": 2085,
