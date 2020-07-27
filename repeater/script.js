@@ -3,17 +3,27 @@ var from = $('#from');
 var to = $('#to');
 var playButton = $('#playpause');
 var loopMarker = $('#loop');
+var stepMarker = $('#step');
+var translationMarker = $('#translate');
+var listenMarker = $('#listen');
+var readMarker = $('#read');
 var playData = [];
 var playDataIndex = 0;
 var japanese = $('#japanese');
 var english = $('#english');
-var playingAudio;
+var playingAudio = new Audio();
+var nextPlayAction = playNextAudioAction;
 var isSessionRunning = false;
 var isInLoop = false;
+var isInStep = false;
+var isInStandardMode = false;
+var isInListenMode = false; // Next sentence starts without Japanese or English
+var isInTranslationMode = false; // Next sentence starts without English
+var isInReadingMode = false; // Next sentence starts without sound
 
 // checked / unchecked is reversed because of CSS
 function startStop() {
-    if (playButton.is(':checked')) {
+    if (isPlayButtonChecked()) {
         if (isSessionRunning) {
             playSameSentence();
         } else {
@@ -33,7 +43,7 @@ function stop() {
 
 function reset() {
     isSessionRunning = false;
-    playButton.prop("checked", false);
+    setPlayButtonToUnchecked();
     stop();
     if (from.val().trim() === "") {
         from.val("0");
@@ -85,11 +95,45 @@ function nextSentence(addition) {
 
     var sentence = playData[playDataIndex];
     current.text(sentence.index);
-    japanese.text(sentence.japanese)
+
+    // JP & EN
+    if (isInListenMode) {
+        japanese.hide();
+        english.hide();
+    } else {
+        japanese.show();
+    }
+    japanese.text(sentence.japanese);
+
+    isInTranslationMode ? english.hide() : english.show();
     english.text(sentence.english);
+
+    // Audio
     playingAudio = sentence.audio;
-    sentence.audio.addEventListener('ended', playNextSentence);
-    sentence.audio.play();
+    playingAudio.addEventListener('ended', getNextPlayAction);
+    if (isInReadingMode) {
+        sentence.audio.muted = true;
+    }
+    if(addition === 0) {
+        sentence.audio.muted = false;
+    }
+    playingAudio.play();
+}
+
+function getNextPlayAction() {
+    return nextPlayAction();
+}
+
+function doNotPlayNextAction() {
+    // NO OP
+}
+
+function playNextAudioAction() {
+    nextSentence(1);
+}
+
+function playSameAudioAction() {
+    nextSentence(0);
 }
 
 function addToPlayDataIndex(addition) {
@@ -166,6 +210,7 @@ function search(term) {
 }
 
 function toggleLoop() {
+    loopMarker.toggle();
     isInLoop = !isInLoop;
 }
 
@@ -177,6 +222,30 @@ function enableLoop() {
     isInLoop = true;
 }
 
+function hideAndDisableStep() {
+    stepMarker.hide();
+    disableStep();
+}
+
+function hideAndDisableLoop() {
+    loopMarker.hide();
+    disableLoop();
+}
+
+function toggleStep() {
+    stepMarker.toggle();
+    isInStep = !isInStep;
+}
+
+function disableStep() {
+    isInStep = false;
+}
+
+function enableStep() {
+    isInStep = true;
+}
+
+
 function togglePlayButton() {
     if (playButton.is(':checked')) {
         playButton.prop("checked", false);
@@ -185,22 +254,35 @@ function togglePlayButton() {
     }
 }
 
+function isPlayButtonChecked() {
+    return playButton.is(':checked');
+}
+
+function setPlayButtonToChecked() {
+    playButton.prop("checked", true);
+}
+
+function setPlayButtonToUnchecked() {
+    playButton.prop("checked", false);
+}
+
+function isAudioPlaying() {
+    return !playingAudio.paused;
+}
+
 document.onkeyup = function (e) {
     if (e.code === "Space") {
+        stepMarker.hide();
+        isInStep = false;
         togglePlayButton();
+        nextPlayAction = playNextAudioAction;
         startStop();
-    }
-    if (e.code === "ArrowDown") {
-        if (isSessionRunning) {
-            stop();
-            playSameSentence();
-        }
     }
     if (e.code === "ArrowLeft") {
         if (isSessionRunning) {
             stop();
-            if (!playButton.is(':checked')) {
-                playButton.prop("checked", true);
+            if (!isPlayButtonChecked) {
+                setPlayButtonToChecked();
             }
             if (isInLoop) {
                 disableLoop();
@@ -214,8 +296,8 @@ document.onkeyup = function (e) {
     if (e.code === "ArrowRight") {
         if (isSessionRunning) {
             stop();
-            if (!playButton.is(':checked')) {
-                playButton.prop("checked", true);
+            if (!isPlayButtonChecked) {
+                setPlayButtonToChecked();
             }
             if (isInLoop) {
                 disableLoop();
@@ -227,11 +309,74 @@ document.onkeyup = function (e) {
         }
     }
     if (e.code === "ArrowUp") {
-        loopMarker.toggle();
         toggleLoop();
+
+        if (isInLoop) {
+            hideAndDisableStep();
+            nextPlayAction = playSameAudioAction;
+        } else {
+            nextPlayAction = playNextAudioAction;
+        }
+
+        if (!isAudioPlaying()) {
+            stop();
+            playSameSentence();
+        }
+        if(isInReadingMode) {
+            playingAudio.muted = false;
+        }
+    }
+    if (e.code === "ArrowDown") {
+        if (isSessionRunning) {
+            stepMarker.show();
+            isInStep = true;
+            hideAndDisableLoop();
+            setPlayButtonToUnchecked();
+            nextPlayAction = doNotPlayNextAction;
+            if (!isAudioPlaying()) {
+                stop();
+                playSameSentence();
+            }
+            if(isInReadingMode) {
+                playingAudio.muted = false;
+            }
+        }
     }
     if (e.code === "KeyE") {
         english.toggle();
+    }
+    if (e.code === "KeyJ") {
+        japanese.toggle();
+    }
+    if (e.code === "Digit1") {
+        isInTranslationMode = !isInTranslationMode;
+        translationMarker.toggle();
+        english.hide();
+    }
+    if (e.code === "Digit2") {
+        isInReadingMode = !isInReadingMode;
+        readMarker.toggle();
+        playingAudio.muted = true;
+    }
+    if (e.code === "Digit3") {
+        isInListenMode = !isInListenMode;
+        listenMarker.toggle();
+        japanese.hide();
+        english.hide();
+    }
+    if (e.code === "Digit4") {
+        isInListenMode = false;
+        listenMarker.hide();
+
+        isInReadingMode = false;
+        readMarker.hide();
+
+        isInTranslationMode = false;
+        translationMarker.hide();
+
+        japanese.show();
+        english.show();
+        playingAudio.muted = false;
     }
 }
 
