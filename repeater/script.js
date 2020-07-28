@@ -103,7 +103,7 @@ function nextSentence(addition) {
 
     // Audio
     if (typeof sentence.audio !== "object") {
-        sentence.audio = new Audio(createPathToAudioFile(sentence.fileName));
+        sentence.audio = createAudio(sentence.fileName);
     }
     playingAudio = sentence.audio;
     playingAudio.addEventListener('ended', getNextPlayAction);
@@ -125,7 +125,7 @@ function prefetch(currentIndex) {
     for (var i = currentIndex; i < currentIndex + 10 && i < playData.length; i++) {
         var sentence = playData[i];
         if (!sentence.audio) {
-            sentence.audio = new Audio(createPathToAudioFile(sentence.fileName));
+            sentence.audio = createAudio(sentence.fileName);
         }
     }
 }
@@ -394,6 +394,15 @@ document.onkeyup = function (e) {
 
 function createPathToAudioFile(fileName) {
     return audioFolder + "/" + fileName;
+}
+
+function createAudio(fileName) {
+    var audio = new Audio(createPathToAudioFile(fileName));
+    audio.onerror = function (e) {
+        console.log("Couldn't play " + sentence.fileName + " - Error: ", e);
+        nextSentence(1);
+    }
+    return audio;
 }
 
 // min (included) and max (included), see https://stackoverflow.com/a/29246176/4179212
