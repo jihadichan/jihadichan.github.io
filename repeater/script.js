@@ -113,7 +113,12 @@ function nextSentence(addition) {
     if (addition === 0) {
         sentence.audio.muted = false;
     }
-    playingAudio.play();
+    try {
+        playingAudio.play();
+    } catch (e) {
+        console.log("Couldn't play " + sentence.fileName + " - Reason: " + e.message);
+        nextSentence(1);
+    }
 }
 
 function prefetch(currentIndex) {
