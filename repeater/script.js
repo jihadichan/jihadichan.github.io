@@ -381,6 +381,9 @@ document.onkeyup = function (e) {
         japanese.show();
         english.show();
         playingAudio.muted = false;
+
+        randomMarker.hide();
+        isInRandomMode = false;
     }
 }
 
