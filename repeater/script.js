@@ -7,6 +7,7 @@ var stepMarker = $('#step');
 var translationMarker = $('#translate');
 var listenMarker = $('#listen');
 var readMarker = $('#read');
+var randomMarker = $('#random');
 var playData = [];
 var playDataIndex = 0;
 var japanese = $('#japanese');
@@ -16,10 +17,11 @@ var nextPlayAction = playNextAudioAction;
 var isSessionRunning = false;
 var isInLoop = false;
 var isInStep = false;
-var isInStandardMode = false;
 var isInListenMode = false; // Next sentence starts without Japanese or English
 var isInTranslationMode = false; // Next sentence starts without English
 var isInReadingMode = false; // Next sentence starts without sound
+var isInRandomMode = false; // Random sequence
+var audioFolder = "meknow"
 
 // checked / unchecked is reversed because of CSS
 function startStop() {
@@ -32,6 +34,7 @@ function startStop() {
     } else {
         stop();
     }
+    playButton.blur();
 }
 
 function stop() {
@@ -45,6 +48,7 @@ function reset() {
     isSessionRunning = false;
     setPlayButtonToUnchecked();
     stop();
+    playDataIndex = 0;
     if (from.val().trim() === "") {
         from.val("0");
     }
@@ -54,28 +58,8 @@ function reset() {
 }
 
 function run() {
-    // Set up
     var localCurrent = parseInt(from.val());
-    if (getTo() - localCurrent > 500) {
-        var plus500 = localCurrent + 500;
-        if (plus500 >= sentences.length - 1) {
-            to.val(sentences.length - 1);
-        } else {
-            to.val(plus500);
-        }
-    }
-
-    // Create audio array to play
-    playData = [];
-    $(sentences.slice(localCurrent, getTo())).each(function (index, sentence) {
-        try {
-            sentence.audio = new Audio("meknow/" + sentence.fileName);
-            playData.push(sentence);
-        } catch (e) {
-            console.log("At index " + sentence.index + " - Failed to load " + sentence.fileName)
-        }
-    })
-    // playDataIndex = 0;
+    playData = sentences.slice(localCurrent, getTo());
     isSessionRunning = true;
     playSameSentence(); // i.e. playDataIndex == 0
 }
@@ -85,16 +69,25 @@ function nextSentence(addition) {
         throw "addition must be set";
     }
 
-    addToPlayDataIndex(addition);
-    if (playDataIndex === playData.length) {
-        playDataIndex = 0;
-        isSessionRunning = false;
-        run();
-        return;
+    if (isInRandomMode && addition !== 0) { // only if in random mode and not playing the same
+        playDataIndex = randomInt(0, playData.length - 1);
+    } else {
+        addToPlayDataIndex(addition);
+        if (playDataIndex === playData.length) {
+            playDataIndex = 0;
+            isSessionRunning = false;
+            run();
+            return;
+        }
+        prefetch(playDataIndex);
     }
 
     var sentence = playData[playDataIndex];
-    current.text(sentence.index);
+    try {
+        current.text(sentence.index);
+    } catch (e) {
+        console.error("Failed to get sentence at index: " + playDataIndex + ", exception: " + e.message)
+    }
 
     // JP & EN
     if (isInListenMode) {
@@ -109,15 +102,27 @@ function nextSentence(addition) {
     english.text(sentence.english);
 
     // Audio
+    if (typeof sentence.audio !== "object") {
+        sentence.audio = new Audio(createPathToAudioFile(sentence.fileName));
+    }
     playingAudio = sentence.audio;
     playingAudio.addEventListener('ended', getNextPlayAction);
     if (isInReadingMode) {
         sentence.audio.muted = true;
     }
-    if(addition === 0) {
+    if (addition === 0) {
         sentence.audio.muted = false;
     }
     playingAudio.play();
+}
+
+function prefetch(currentIndex) {
+    for (var i = currentIndex; i < currentIndex + 10 && i < playData.length; i++) {
+        var sentence = playData[i];
+        if (!sentence.audio) {
+            sentence.audio = new Audio(createPathToAudioFile(sentence.fileName));
+        }
+    }
 }
 
 function getNextPlayAction() {
@@ -232,17 +237,8 @@ function hideAndDisableLoop() {
     disableLoop();
 }
 
-function toggleStep() {
-    stepMarker.toggle();
-    isInStep = !isInStep;
-}
-
 function disableStep() {
     isInStep = false;
-}
-
-function enableStep() {
-    isInStep = true;
 }
 
 
@@ -310,6 +306,9 @@ document.onkeyup = function (e) {
     }
     if (e.code === "ArrowUp") {
         toggleLoop();
+        if (!isPlayButtonChecked()) {
+            setPlayButtonToChecked();
+        }
 
         if (isInLoop) {
             hideAndDisableStep();
@@ -322,7 +321,7 @@ document.onkeyup = function (e) {
             stop();
             playSameSentence();
         }
-        if(isInReadingMode) {
+        if (isInReadingMode) {
             playingAudio.muted = false;
         }
     }
@@ -337,7 +336,7 @@ document.onkeyup = function (e) {
                 stop();
                 playSameSentence();
             }
-            if(isInReadingMode) {
+            if (isInReadingMode) {
                 playingAudio.muted = false;
             }
         }
@@ -365,6 +364,11 @@ document.onkeyup = function (e) {
         english.hide();
     }
     if (e.code === "Digit4") {
+        randomMarker.toggle();
+        isInRandomMode = !isInRandomMode;
+    }
+
+    if (e.code === "Digit5") {
         isInListenMode = false;
         listenMarker.hide();
 
@@ -380,7 +384,15 @@ document.onkeyup = function (e) {
     }
 }
 
+function createPathToAudioFile(fileName) {
+    return audioFolder + "/" + fileName;
+}
+
+// min (included) and max (included), see https://stackoverflow.com/a/29246176/4179212
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 setCurrent(0);
 setTotal();
 setFromTo();
-

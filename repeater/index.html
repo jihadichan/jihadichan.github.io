@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <meta charset="UTF-8">
     <title>Repeater</title>
 </head>
@@ -87,7 +88,7 @@
         font-size: 0.8em;
     }
 
-    #loop, #step, #listen, #translate, #read {
+    #loop, #step, #listen, #translate, #read, #random {
         font-weight: bold;
         color: darkred;
     }
@@ -134,7 +135,8 @@
                     Space: play/stop, Left / Right: back/forth, Down: step, Up: loop<br>
                     E / J: toggle English/Japanese, Find index: search("JP / EN") in console<br>
                     1: Translation mode (no English), 2: Reading mode (no audio)<br>
-                    3: Listening mode (no Japanese), 4: Standard mode (show all)<br>
+                    3: Listening mode (no Japanese), 4: Random mode (random order)<br>
+                    5: Standard mode (show all)<br>
                 </td>
                 <td style="vertical-align: top">
                     <div id="loop" style="display: none">LOOP</div>
@@ -142,6 +144,7 @@
                     <div id="translate" style="display: none">1: No English</div>
                     <div id="read" style="display: none">2: No Audio</div>
                     <div id="listen" style="display: none">3: No Japanese</div>
+                    <div id="random" style="display: none">4: Random Order</div>
                 </td>
             </tr>
         </table>
