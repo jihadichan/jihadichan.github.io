@@ -8,7 +8,7 @@ var currentVocabMarkupObj = {};
 function toCsvRow() {
 
     var focus = $('#focus').val().trim();
-    if(focus !== "") {
+    if (focus !== "") {
         focus = focus.replace(/\n/, "<br>") + "<br><br>";
     }
     var sentence = focus + $('#sentence').val();
@@ -22,7 +22,7 @@ function toCsvRow() {
 
     row += sentence + "\t";
     row += notes.replace(/\n/g, "<br>") + "\t";
-    if(source.trim() !== "") {
+    if (source.trim() !== "") {
         row += source.replace(/\n/g, "<br>") + "\t";
     } else {
         row += " ";
@@ -423,10 +423,13 @@ document.addEventListener('paste', function (e) {
             notes += obj.english;
         }
         if (obj.hiragana) {
-            notes += "\n- "+obj.hiragana;
+            notes += "\n- " + obj.hiragana;
         }
         if (notes !== "") {
             $('#notes').val(notes);
+        }
+        if (obj.source) {
+            $('#source').val(obj.source);
         }
 
     } catch (exception) {
