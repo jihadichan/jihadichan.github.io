@@ -453,7 +453,8 @@
                 <textarea id="notes" class="notes-field" placeholder="Notes"></textarea>
             </label><br>
             <label>
-                <textarea id="source" class="source-field" placeholder="Source"></textarea>
+                <textarea oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                          id="source" class="source-field" placeholder="Source"></textarea>
             </label>
             <button class="options-button" onclick="toCsvRow()" style="float: left">Copy</button>
             <a href='#modal' rel='modal:open' class="left-margin options-button-link"><button class='options-button' onclick='renderJishoVocabLookup()'>Vocab</button></a>
