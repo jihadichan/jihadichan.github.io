@@ -450,7 +450,8 @@
                 <input id="sentence" type="text" class="sentence-field" placeholder="Japanese"/>
             </label><br>
             <label>
-                <textarea id="notes" class="notes-field" placeholder="Notes"></textarea>
+                <textarea oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                        id="notes" class="notes-field" placeholder="Notes"></textarea>
             </label><br>
             <label>
                 <textarea oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
