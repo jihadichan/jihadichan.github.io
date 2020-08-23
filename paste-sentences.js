@@ -9,7 +9,7 @@ function toCsvRow() {
 
     var focus = $('#focus').val().trim();
     if (focus !== "") {
-        focus = focus.replace(/(?:\r\n|\r|\n)/g, "#") + "<br><br>";
+        focus = focus.replace(/(?:\r\n|\r|\n)/g, "<br>") + "<br><br>";
     }
     var sentence = focus + $('#sentence').val();
     var notes = $('#notes').val();
