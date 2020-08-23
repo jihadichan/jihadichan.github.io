@@ -9,7 +9,7 @@ function toCsvRow() {
 
     var focus = $('#focus').val().trim();
     if (focus !== "") {
-        focus = focus.replace(/\n/, "<br>") + "<br><br>";
+        focus = focus.replace(/(?:\r\n|\r|\n)/g, "#") + "<br><br>";
     }
     var sentence = focus + $('#sentence').val();
     var notes = $('#notes').val();
@@ -21,9 +21,9 @@ function toCsvRow() {
     }
 
     row += sentence + "\t";
-    row += notes.replace(/\n/g, "<br>") + "\t";
+    row += notes.replace(/(?:\r\n|\r|\n)/g, "<br>") + "\t";
     if (source.trim() !== "") {
-        row += source.replace(/\n/g, "<br>") + "\t";
+        row += source.replace(/(?:\r\n|\r|\n)/g, "<br>") + "\t";
     } else {
         row += " ";
     }
@@ -60,6 +60,7 @@ function reset() {
     $('#sentence').val("");
     $('#notes').val("");
     $('#source').val("");
+    $('#focus').val("");
 }
 
 function getSelectedText() {
