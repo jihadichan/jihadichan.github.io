@@ -29,7 +29,7 @@ function startStop() {
         if (isSessionRunning) {
             playSameSentence();
         } else {
-            run();
+            run(false);
         }
     } else {
         stop();
@@ -57,11 +57,16 @@ function reset() {
     }
 }
 
-function run() {
-    var localCurrent = parseInt(from.val());
-    playData = sentences.slice(localCurrent, getTo());
+function run(isRestart) {
+    var frm = parseInt(from.val());
+    var cur = parseInt(current.text());
+    playData = sentences.slice(frm, getTo());
     isSessionRunning = true;
-    playSameSentence(); // i.e. playDataIndex == 0
+    if(isRestart) {
+        playSameSentence(); // i.e. playDataIndex == 0
+    } else {
+        playCurrentSentence(cur - frm);
+    }
 }
 
 function nextSentence(addition) {
@@ -76,7 +81,7 @@ function nextSentence(addition) {
         if (playDataIndex === playData.length) {
             playDataIndex = 0;
             isSessionRunning = false;
-            run();
+            run(true);
             return;
         }
         prefetch(playDataIndex);
@@ -161,6 +166,10 @@ function playNextSentence() {
     nextSentence(1);
 }
 
+function playCurrentSentence(current) {
+    nextSentence(current);
+}
+
 function playPreviousSentence() {
     nextSentence(-1);
 }
@@ -173,17 +182,25 @@ function setTotal() {
     $('#total').html(getMaxIndex());
 }
 
-function setCurrent(value) {
-    current.html(value);
-}
+// not used anymore?
+// function setCurrent(value) {
+//     current.html(value);
+// }
 
 function setFromTo() {
     const urlParams = new URLSearchParams(window.location.search);
     var fromNr = urlParams.get("from");
     var toNr = urlParams.get("to");
+    var cur = urlParams.get("current");
+
+    if(cur !== null) {
+        current.html(cur);
+    } else {
+        current.html(0);
+    }
+
     if (fromNr !== null) {
         from.val(fromNr);
-        current.html(fromNr);
     } else {
         from.val(0);
     }
@@ -410,6 +427,5 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-setCurrent(0);
 setTotal();
 setFromTo();
