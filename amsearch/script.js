@@ -13,6 +13,7 @@ function renderTagList() {
 
 function attach(tag) {
     searchField.val(tag);
+    search();
 }
 
 function search() {
