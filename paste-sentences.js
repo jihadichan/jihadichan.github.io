@@ -501,3 +501,9 @@ function updateSingleGrammarLink(cssId, url) {
     link.attr("href", url);
     link.text(url);
 }
+
+document.onkeyup = function (e) {
+    if (e.code === 'Escape') {
+        reset();
+    }
+}
