@@ -61,6 +61,7 @@ function reset() {
     $('#notes').val("");
     $('#source').val("");
     $('#focus').val("");
+    resetMarkupObj();
 }
 
 function getSelectedText() {
