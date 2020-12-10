@@ -16,14 +16,14 @@ function search() {
 
 function renderResults(matches) {
     var html = "<table>";
-
     $(matches).each(function (index, entry) {
         html += "<tr>";
-        html += "   <td style='text-align: center'>";
-        html += "       " + entry.k;
+        html += "   <td style='text-align: center; font-size: 1.8em'>";
+        html += "       " + entry.kj;
         html += "   </td>";
         html += "   <td class='info'>";
-        html += "       " + entry.m;
+        html += "       " + entry.m + "<br>";
+        html += "       " + createConf(entry);
         html += "   </td>";
         html += "</tr>";
     });
@@ -32,10 +32,13 @@ function renderResults(matches) {
     resultSetElement.html(html);
 }
 
+function createConf(entry) {
+    return "!conf " + entry.kj + " (" + entry.r + ", " + entry.kw + ")";
+}
+
 function collectMatches(searchTerm) {
     var matches = [];
     searchTerm = normalizeSearchTerm(searchTerm);
-    console.log(searchTerm)
     $(data).each(function (index, entry) {
         if (hasMatches(searchTerm, entry)) {
             matches.push(entry);
@@ -65,7 +68,7 @@ function normalizeSearchTerm(searchTerm) {
 }
 
 function hasMatches(searchTerm, entry) {
-    entry = entry.k + ", " + entry.m;
+    entry = entry.kj + ", " + entry.m;
     return entry.search(new RegExp(searchTerm, "i")) > -1;
 }
 
