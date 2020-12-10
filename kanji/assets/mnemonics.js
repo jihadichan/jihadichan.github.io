@@ -1,7 +1,10 @@
 var searchField = $('#search-field');
 var resultSetElement = $('#result-set-container');
+var confViewContainer = $('#conf-view-container');
 var info = $('#info');
+var confSearch = $('#conf-search');
 var KATAKANA_HIRAGANA_SHIFT = "\u3041".charCodeAt(0) - "\u30a1".charCodeAt(0);
+var confEntries = [];
 
 function search() {
     var searchTerm = searchField.val().trim();
@@ -9,31 +12,104 @@ function search() {
         info.html("No search term");
         return;
     }
-    var matches = collectMatches(searchTerm);
+
+    resetConfs();
+    var searchTerms = createSearchTerms(searchTerm);
+    var matches = multiSearch(searchTerms);
+
     info.html("Results: " + matches.length);
-    renderResults(matches);
+    renderResults(matches, searchTerms);
+    renderConfView(searchTerms);
 }
 
-function renderResults(matches) {
+function resetConfs() {
+    confEntries = [];
+    confViewContainer.html("");
+}
+
+function createSearchTerms(searchTerm) {
+    if (searchTerm.indexOf(" cf ") !== -1) {
+        var searchTerms = searchTerm.split(" cf ");
+        confSearch.html("Confusion search. Kanji: " + searchTerms.join(", "));
+        return searchTerms;
+    } else {
+        confSearch.html("");
+        confEntries = [];
+        return new Array(searchTerm);
+    }
+}
+
+function renderConfView(searchTerms) {
+    if (searchTerms.length < 2) {
+        return;
+    }
+    var confView = "";
+    $(confEntries).each(function (index, entry) {
+        var confs = [];
+        $(confEntries).each(function (index, candidate) {
+            if (entry.kj !== candidate.kj) {
+                confs.push(candidate);
+            }
+        });
+
+        var line = entry.kj + ": !conf "
+        $(confs).each(function (index, confEntry) {
+            line += createConf(confEntry) + ", ";
+        });
+        confView += line.replace(/, $/, "<br>");
+    });
+
+    confViewContainer.html(confView);
+}
+
+function renderResults(matches, searchTerms) {
     var html = "<table>";
+    var duplicates = [];
     $(matches).each(function (index, entry) {
-        html += "<tr>";
+        if (duplicates.includes(entry.kj)) {
+            return;
+        }
+        if (shouldHighlight(entry, searchTerms)) {
+            html += "<tr style='background: rgb(235, 250, 235)'>";
+        } else {
+            html += "<tr>";
+        }
+
         html += "   <td style='text-align: center; font-size: 1.8em'>";
         html += "       " + entry.kj;
         html += "   </td>";
         html += "   <td class='info'>";
         html += "       " + entry.m + "<br>";
-        html += "       " + createConf(entry);
+        html += "       " + createConfWithMarker(entry);
         html += "   </td>";
         html += "</tr>";
+        duplicates.push(entry.kj);
     });
     html += "</table>";
 
     resultSetElement.html(html);
 }
 
+function shouldHighlight(entry, searchTerms) {
+    if (searchTerms.length < 2) {
+        return false;
+    }
+    var putHighlight = false;
+    $(searchTerms).each(function (index, searchTerm) {
+        if (entry.kj === searchTerm.trim()) {
+            confEntries.push(entry);
+            putHighlight = true;
+        }
+    });
+    return putHighlight;
+}
+
+function createConfWithMarker(entry) {
+    return "!conf " + createConf(entry);
+}
+
 function createConf(entry) {
-    return "!conf " + entry.kj + " (" + entry.r + ", " + entry.kw + ")";
+    return entry.kj + " (" + entry.r + ", " + entry.kw + ")"
 }
 
 function collectMatches(searchTerm) {
@@ -43,6 +119,17 @@ function collectMatches(searchTerm) {
         if (hasMatches(searchTerm, entry)) {
             matches.push(entry);
         }
+    });
+    return matches;
+}
+
+function multiSearch(searchTerms) {
+    var matches = [];
+    $(searchTerms).each(function (index, searchTerm) {
+        var singleMatches = collectMatches(searchTerm)
+        $(singleMatches).each(function (index, result) {
+            matches.push(result);
+        });
     });
     return matches;
 }
