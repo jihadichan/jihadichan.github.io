@@ -75,12 +75,23 @@ function renderResults(matches, searchTerms) {
             html += "<tr>";
         }
 
-        html += "   <td style='text-align: center; font-size: 1.8em'>";
-        html += "       " + entry.kj;
+        html += "   <td style='text-align: center'>";
+        html += "       <div style='font-size: 1.8em'>" + entry.kj + "</div>";
+        html += "" +
+            "<div class='kw-table'><table>" +
+            "   <tr style='background: none'>" +
+            "      <td style='width: 42px'>CP: </td>" +
+            "      <td>" + entry.cp + "</td>" +
+            "   </tr>" +
+            "   <tr style='background: none'>" +
+            "      <td>RTK: </td>" +
+            "      <td>" + entry.rtk + "</td>" +
+            "   </tr>" +
+            "</table></div>";
         html += "   </td>";
         html += "   <td class='info'>";
-        html += "       " + entry.m + "<br>";
-        html += "       " + createConfWithMarker(entry);
+        html += "       " + entry.m + "<br><br>";
+        html += "       !conf " + createConf(entry);
         html += "   </td>";
         html += "</tr>";
         duplicates.push(entry.kj);
@@ -104,12 +115,15 @@ function shouldHighlight(entry, searchTerms) {
     return putHighlight;
 }
 
-function createConfWithMarker(entry) {
-    return "!conf " + createConf(entry);
+function createConf(entry) {
+    return entry.kj + " (" + entry.r + ", " + getMainKeyword(entry) + ")"
 }
 
-function createConf(entry) {
-    return entry.kj + " (" + entry.r + ", " + entry.kw + ")"
+function getMainKeyword(entry) {
+    if (entry.cp && entry.cp !== "") {
+        return  entry.cp;
+    }
+    return entry.rtk;
 }
 
 function collectMatches(searchTerm) {
