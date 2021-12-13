@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mnemonics</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+
+        .kw-table {
+
+        }
+
+        .kw-table table {
+            margin: 0 auto;
+            max-width: 240px;
+            font-size: 0.9em;
+            border: 0;
+        }
+
+        .kw-table td {
+            border: 0 !important;
+            padding: 5px !important;
+            background: none !important;
+        }
+
+        .search-container {
+            width: 500px;
+            border: 1px solid #999;
+            margin: 50px auto 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #search-field {
+            width: 400px;
+            height: 30px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 1.2em;
+        }
+
+        .search-inputs {
+            margin: 0 auto;
+            display: inline;
+        }
+
+        #search-button {
+            margin-left: 10px;
+            width: 70px;
+            height: 43px;
+            position: relative;
+            bottom: 3px;
+        }
+
+        #search-links {
+            margin-top: 10px;
+        }
+
+        #search-links a {
+            color: black;
+            font-size: 0.9em;
+        }
+
+        .search-link {
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        .search-button-container {
+            float: right;
+        }
+
+
+        .hint {
+            font-size: 0.8em;
+            color: #999999;
+        }
+
+        .options {
+            margin-top: 7px;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 1.2em;
+            color: red;
+        }
+
+        .json {
+
+        }
+
+        .json pre {
+            margin: 0 auto;
+            width: 300px;
+            background-color: #eee;
+        }
+
+        #result-size {
+            margin-top: 10px;
+            font-weight: bold;
+            float: right;
+        }
+
+        #result-set-container {
+            margin: 0 auto;
+            width: 800px;
+        }
+
+        #conf-view-container {
+            font-size: 1.2em;
+            margin: 0 auto 20px auto;
+            width: 800px;
+        }
+
+        #result-set-container table {
+            border-collapse: collapse;
+            width: 800px;
+        }
+
+        #result-set-container td {
+            border: 1px solid #c6cbd1;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .first-column {
+            white-space: nowrap;
+            font-size: 1.1em;
+        }
+
+        .first-column a {
+            font-size: 1em;
+        }
+
+        .details {
+            font-size: 0.9em;
+        }
+
+        #result-set-container tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+
+        .hl {
+            background-color: rgba(255, 190, 43, 0.3);
+        }
+
+        .link {
+            color: #000;
+        }
+
+        #all-tags {
+            margin-top: 20px;
+        }
+
+        #all-tags span {
+            line-height: 30px;
+            padding: 3px 3px;
+            font-size: 0.8em;
+            border: 1px #aaa solid;
+        }
+
+        #all-tags span:hover {
+            background: #ccc;
+            cursor: pointer;
+        }
+
+        .pic {
+            max-width: 270px;
+            max-height: 400px;
+        }
+
+        .info {
+            vertical-align: top;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="search-container">
+        <div class="search-inputs">
+            <label>
+                <input type="text" id="search-field" placeholder=" Search..."/>
+                <input type="button" id='search-button' onclick="search()" value="Search">
+            </label>
+        </div>
+        <div id="info"></div>
+        <div id="conf-search"></div>
+    </div>
+    <div id="conf-view-container"></div>
+    <div id="result-set-container"></div>
+</div>
+
+<script src="assets/mnemonics-data.js"></script>
+<script src="assets/jquery-3.4.1.min.js"></script>
+<script src="assets/wanakana.min.js"></script>
+<script src="assets/mnemonics.js"></script>
+</body>
+</html>
