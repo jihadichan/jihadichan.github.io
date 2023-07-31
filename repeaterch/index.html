@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+    <meta charset="UTF-8">
+    <title>Repeater</title>
+</head>
+<style type="text/css">
+    body {
+        background-color: #eee;
+        font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+    }
+
+    .options {
+        background-color: #eee;
+        padding: 5px;
+    }
+
+    .container {
+        width: 700px;
+        height: 200px;
+        position: absolute;
+        left: 50%;
+        top: 17%;
+        transform: translate(-50%, -50%);
+    }
+
+    .sentence {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        height: 100%;
+    }
+
+    .fromto {
+        width: 40px;
+    }
+
+
+    .playpause label {
+        float: right;
+        display: block;
+        box-sizing: border-box;
+        width: 0;
+        height: 50px;
+        border-color: transparent transparent transparent #ddd;
+        transition: 100ms all ease;
+        cursor: pointer;
+        border-style: solid;
+        border-width: 24px 0 24px 40px;
+    }
+
+    .playpause input[type="checkbox"] {
+        position: absolute;
+        left: -9999px;
+
+    }
+
+    .playpause input[type="checkbox"]:checked + label {
+        border-style: double;
+        border-width: 0 0 0 40px;
+    }
+
+    .playpause input[type="checkbox"]:focus + label {
+        outline: 0;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .japanese-container {
+        margin-top: 75px;
+        text-align: center;
+        font-size: 1.2em;
+        min-height: 30px;
+    }
+
+    .english-container {
+        margin-top: 12px;
+        font-size: 0.8em;
+        color: #bbb;
+        text-align: center;
+    }
+
+    .help {
+        padding: 5px;
+        color: #ddd;
+        font-size: 0.8em;
+    }
+
+    #loop, #step, #listen, #translate, #read, #random {
+        font-weight: bold;
+        color: darkred;
+    }
+
+</style>
+<body>
+
+
+<div class="container">
+    <div class="options">
+        <table>
+            <tr>
+                <td>
+                    <label>From: <input type="text" id="from" class="fromto" onchange="reset()" onfocus="setFocus()" onblur="unsetFocus()"/></label>
+                    <label>To: <input type="text" id="to" class="fromto" onchange="reset()" onfocus="setFocus()" onblur="unsetFocus()"/></label>
+                    <label>Speed (%): <input type="text" value="100" id="speed" class="fromto" onfocus="setFocus()" onblur="unsetFocus()"/></label>
+                    <span id="repeat-field"></span>
+                    <span id="repeat-count"></span>
+                </td>
+                <td rowspan="2">
+                    <div class="playpause">
+                        <input type="checkbox" value="None" id="playpause" name="check" onchange="startStop()"/>
+                        <label for="playpause" tabindex=1></label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>Current: <span id="current"></span> / <span id="total"></span></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="sentence">
+        <div class="japanese-container">
+            <div id="japanese"></div>
+        </div>
+        <div class="english-container">
+            <div id="english"></div>
+        </div>
+    </div>
+
+    <div class="help">
+        <table>
+            <tr>
+                <td>
+                    Space: play/stop, Left / Right: back/forth, Down: step, Up: loop<br>
+                    E / J: toggle English/Japanese, Find index: search("JP / EN") in console<br>
+                    1: Translation mode (no English), 2: Reading mode (no audio)<br>
+                    3: Listening mode (no Japanese), 4: Random mode (random order)<br>
+                    5: Standard mode (show all)<br>
+                </td>
+                <td style="vertical-align: top">
+                    <div id="loop" style="display: none">LOOP</div>
+                    <div id="step" style="display: none">STEP</div>
+                    <div id="translate" style="display: none">1: No English</div>
+                    <div id="read" style="display: none">2: No Audio</div>
+                    <div id="listen" style="display: none">3: No Japanese</div>
+                    <div id="random" style="display: none">4: Random Order</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="meknow-data.js" type="application/javascript"></script>
+<script src="jquery-3.4.1.min.js" type="application/javascript"></script>
+<script src="script.js" type="application/javascript"></script>
+</body>
+</html>
