@@ -1,0 +1,27 @@
+.desc {
+    margin-bottom: 10px;
+}
+
+.t1 { /* Pinyin */
+    background-color: #e5eef5;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-family: Arial, sans-serif;
+}
+
+.t0 { /* Mandarin */
+    background-color: #eef6ff;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "SimSun", serif;
+    font-size: 1.4em;
+}
+
+.t2 { /* English */
+    background-color: #e5eef5;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+}
