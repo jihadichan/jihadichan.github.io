@@ -1,12 +1,13 @@
 .desc {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
 }
 
 .t1 { /* Pinyin */
     background-color: #e5eef5;
     padding: 10px 10px 10px 30%;
     border-radius: 5px;
-    margin-top: 5px;
+    margin-top: 3px;
     font-family: Arial, sans-serif;
 }
 
@@ -22,6 +23,22 @@
     background-color: #e5eef5;
     padding: 10px 10px 10px 30%;
     border-radius: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     font-family: Arial, sans-serif;
+}
+
+.play-button {
+    display: inline; /* Display inline like text */
+    cursor: pointer; /* Show pointer cursor on hover */
+    border: none; /* Remove any border */
+    margin-right: 10px;
+    background: none; /* Remove background */
+    line-height: inherit; /* Keep line-height consistent */
+}
+
+.counter {
+    padding: 5px;
+    background-color: #dbecff;
+    font-size: 1.2em;
+    font-family: "Arial", serif;
 }

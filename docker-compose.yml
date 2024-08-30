@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: reader_nginx
+    image: nginx:latest
+    ports:
+      - "3000:80"
+    volumes:
+      - /home/cc/Desktop/Programming/repos/jp/jihadichan.github.io:/usr/share/nginx/html
+    restart: unless-stopped
