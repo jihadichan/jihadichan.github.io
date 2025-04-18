@@ -99,5 +99,62 @@ function addCounterToDescDivs() {
     });
 }
 
+// Function to copy text to clipboard
+function copyToClipboard(text) {
+    const tempTextarea = document.createElement("textarea");
+    tempTextarea.style.position = "absolute";
+    tempTextarea.style.left = "-9999px";
+    tempTextarea.value = text;
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempTextarea);
+}
+
+
+
+// Function to normalize whitespace in text
+function normalizeTextFromHTML(html) {
+    console.log('html:', html);
+    return html
+        .replace(/<br\s*\/?>/gi, '\n') // Replace <br> tags with newlines
+        .replace(/<\/div>/gi, '\n') // Replace <div> tags with newlines
+        .replace(/\u00A0/g, ' ')       // Replace non-breaking spaces with regular spaces
+        .replace(/[“”▷️]/g, '')        // Remove specific unwanted special characters
+        .replace(/<\/?[^>]+>/g, '')    // Remove any remaining HTML tags
+        .replace(/&nbsp;/g, ' ')      // Remove HTML spaces
+        .trim();                       // Trim leading and trailing whitespace
+}
+
+
+
+// Add a copy button to each `desc` element
+function addCopyButtonToDescElements() {
+    document.querySelectorAll(".desc").forEach(descElement => {
+        // Create the copy button
+        const button = document.createElement("button");
+        button.classList.add("copy-btn");
+        button.textContent = "Copy";
+
+        button.addEventListener("click", () => {
+            let allText = '';
+
+            // Collect and process all .t0 divs inside the current desc element
+            descElement.querySelectorAll(".t0").forEach(t0Element => {
+                let htmlContent = t0Element.innerHTML; // Get HTML content of .t0
+                let normalizedText = normalizeTextFromHTML(htmlContent); // Normalize it
+                allText += normalizedText + '\n\n'; // Add a newline after each div
+            });
+
+            // Copy the collected and processed text to clipboard
+            copyToClipboard(allText.trim());
+        });
+
+        // Prepend the button to the `desc` element
+        descElement.insertBefore(button, descElement.firstChild);
+    });
+}
+
 // Call the function to add counters to all .desc divs
 addCounterToDescDivs();
+addCopyButtonToDescElements()
