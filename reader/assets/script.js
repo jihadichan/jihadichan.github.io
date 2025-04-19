@@ -21,6 +21,32 @@ document.querySelectorAll('.t0').forEach(mandarinDiv => {
     });
 });
 
+function togglePlayButtonsDisplay() {
+    const playButtons = document.querySelectorAll('.play-button'); // Select all play-button elements
+
+    playButtons.forEach(button => {
+        // Toggle visibility status
+        const isHidden = getComputedStyle(button).display === 'none';
+        button.style.display = isHidden ? 'block' : 'none';
+    });
+}
+
+function addToggleButton() {
+    // Create the button element
+    const toggleButton = document.createElement('button');
+    toggleButton.textContent = 'Toggle Play Buttons'; // Set button text
+    toggleButton.style.marginBottom = '10px'; // Optional styling
+    toggleButton.style.display = 'block'; // Make it appear as block for spacing
+
+    // Add an event listener to execute the toggle function when clicked
+    toggleButton.addEventListener('click', togglePlayButtonsDisplay);
+
+    // Insert the button at the very beginning of the body
+    document.body.insertAdjacentElement('afterbegin', toggleButton);
+}
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const t0Divs = document.querySelectorAll('.t0');
@@ -158,3 +184,4 @@ function addCopyButtonToDescElements() {
 // Call the function to add counters to all .desc divs
 addCounterToDescDivs();
 addCopyButtonToDescElements()
+document.addEventListener('DOMContentLoaded', addToggleButton);
