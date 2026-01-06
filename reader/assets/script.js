@@ -230,7 +230,7 @@ function addCopyButtonToDescElements() {
 }
 
 // Render the HTML if JSON provided
-if (console) {
+if (content) {
     document.getElementById('container').innerHTML = createTranscriptHTMLString(content);
 }
 
