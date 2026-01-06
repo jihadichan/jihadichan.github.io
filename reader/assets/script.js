@@ -1,25 +1,77 @@
-document.querySelectorAll('.t0').forEach(mandarinDiv => {
-    mandarinDiv.addEventListener('click', function() {
-        // Find the parent element
-        const parentDiv = this.parentElement;
+function createTranscriptHTMLString(content) {
+    let html = '<div>';
 
-        // Find the pinyin (t1) and english (t2) elements within this parent
-        const pinyinDiv = parentDiv.querySelector('.t1');
-        const englishDiv = parentDiv.querySelector('.t2');
+    content.forEach((item, index) => {
 
-        // Check current visibility status
-        const isHidden = getComputedStyle(pinyinDiv).display === 'none';
 
-        // Toggle visibility of the pinyin and english elements
-        if (pinyinDiv) {
-            pinyinDiv.style.display = isHidden ? 'block' : 'none';
+        html += `
+          <div>
+            <div class="t0 text_size simsun">
+                <span>${item.transcript.mandarin}</span>
+            </div>
+            <div class="t2 text_size" style="display:none;">
+                <span>
+                    <span class="english">${item.transcript.english}</span><br>
+                    <table class="breakdown-table">
+                        <tbody>`;
+
+        // Add breakdown rows
+        item.breakdown.forEach(component => {
+            html += `
+                            <tr>
+                                <td>
+                                   <ruby class="component">${component.term}<rt class="pinyin">${component.pinyin}</rt></ruby>
+                                   <!-- <span class="component">${component.term}</span><br>
+                                   <span >(${component.pinyin})</span></td> -->
+                                <td class="explanation">${component.explanation}</td>
+                            </tr>`;
+        });
+
+        html += `
+                        </tbody>
+                    </table>`;
+
+        html += `<div class="word-by-word">${item.word_by_word}</div>
+                </span>`;
+
+        if (item.note) {
+            html += `
+                    <div class="note">
+                        Note: ${item.note}
+                    </div>`;
         }
 
-        if (englishDiv) {
-            englishDiv.style.display = isHidden ? 'block' : 'none';
-        }
+        html += '</div>';
     });
-});
+
+    html += '</div></div>';
+    return html;
+}
+
+function addVisibilityToggles() {
+    document.querySelectorAll('.t0').forEach(mandarinDiv => {
+        mandarinDiv.addEventListener('click', function () {
+            // Find the parent element
+            const parentDiv = this.parentElement;
+
+            // Find the pinyin (t1) and english (t2) elements within this parent
+            const pinyinDiv = parentDiv.querySelector('.t1');
+            const englishDiv = parentDiv.querySelector('.t2');
+
+            // Check current visibility status
+            const isHidden = getComputedStyle(englishDiv).display === 'none';
+
+            // Toggle visibility of the pinyin and english elements
+            if (pinyinDiv) {
+                pinyinDiv.style.display = isHidden ? 'block' : 'none';
+            }
+
+            if (englishDiv) {
+                englishDiv.style.display = isHidden ? 'block' : 'none';
+            }
+        });
+    });
+}
 
 function togglePlayButtonsDisplay() {
     const playButtons = document.querySelectorAll('.play-button'); // Select all play-button elements
@@ -46,9 +98,7 @@ function addToggleButton() {
 }
 
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const t0Divs = document.querySelectorAll('.t0');
     console.log('t0Divs:', t0Divs);
     t0Divs.forEach(div => {
@@ -138,7 +188,6 @@ function copyToClipboard(text) {
 }
 
 
-
 // Function to normalize whitespace in text
 function normalizeTextFromHTML(html) {
     console.log('html:', html);
@@ -151,7 +200,6 @@ function normalizeTextFromHTML(html) {
         .replace(/&nbsp;/g, ' ')      // Remove HTML spaces
         .trim();                       // Trim leading and trailing whitespace
 }
-
 
 
 // Add a copy button to each `desc` element
@@ -181,7 +229,13 @@ function addCopyButtonToDescElements() {
     });
 }
 
-// Call the function to add counters to all .desc divs
+// Render the HTML if JSON provided
+if (console) {
+    document.getElementById('container').innerHTML = createTranscriptHTMLString(content);
+}
+
+// Add event listeners and buttons
+addVisibilityToggles();
 addCounterToDescDivs();
 addCopyButtonToDescElements()
 document.addEventListener('DOMContentLoaded', addToggleButton);

@@ -1,0 +1,63 @@
+Prompt v2
+
+Transcribe the given audio. The audio is structured like this:
+1. English sentence
+2. Mandarin translation, repeated 3 times.
+
+In your transcript, do not repeat the translation. Once is enough.
+Format your transcript as a JSON object with the exact structure specified below.
+The JSON must include a component breakdown with short explanations and a note explaining important concepts in the sentence. Also include a word-by-word translation in the format `让 (Let) 我们 (us) 吃 (eat) 午饭 (lunch).`.
+
+IMPORTANT:
+- The Mandarin transcript MUST use Simplified Chinese. DO NOT use Traditional Chinese.
+- Make sure to replicate the JSON structure precisely with all specified fields in the given order.
+- Transcribe the whole audio file, not just an excerpt.
+
+Example input:
+```
+I didn't go to school last month.
+
+我上个月没去上学。
+我上个月没去上学。
+我上个月没去上学。
+```
+
+
+Expected output JSON structure:
+```json
+{
+    "transcript": {
+        "mandarin": "我上个月没去上学。",
+        "english": "I didn't go to school last month."
+    },
+    "breakdown": [
+        {
+            "term": "我",
+            "pinyin": "wǒ",
+            "explanation": "\"I\" or \"me.\""
+        },
+        {
+            "term": "上个月",
+            "pinyin": "shàng gè yuè",
+            "explanation": "\"Last month.\" In Chinese, time expressions usually appear before the verb."
+        },
+        {
+            "term": "没",
+            "pinyin": "méi",
+            "explanation": "Short for \"没有\" (méiyǒu), meaning \"did not.\" It is used to negate past actions."
+        },
+        {
+            "term": "去",
+            "pinyin": "qù",
+            "explanation": "The verb \"to go.\""
+        },
+        {
+            "term": "上学",
+            "pinyin": "shàngxué",
+            "explanation": "\"To go to school\" or \"attend class.\""
+        }
+    ],
+    "note": "When negating a completed action in the past, \"没\" (méi) is used instead of \"不\" (bù).",
+    "word_by_word": "我 (I) 上个月 (last month) 没 (didn't) 去 (go) 上学 (attend school)."
+}
+```

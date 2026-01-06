@@ -24,6 +24,7 @@
     padding: 10px 10px 10px 30%;
     border-radius: 5px;
     margin-bottom: 3px;
+    margin-left: 34px;
     font-family: Arial, sans-serif;
 }
 
@@ -41,4 +42,35 @@
     background-color: #dbecff;
     font-size: 1.2em;
     font-family: "Arial", serif;
+}
+
+.english {
+
+}
+
+.breakdown-table {
+    margin-top: 10px;
+    max-width: 800px;
+}
+
+.component {
+    font-size: 1.3em;
+}
+
+.note {
+    margin-top: 10px;
+    max-width: 800px;
+}
+
+.word-by-word {
+    margin-top: 10px;
+    max-width: 800px;
+}
+
+.pinyin rt {
+    font-size: 0.8em;
+}
+
+.explanation {
+    padding-left: 5px;
 }
