@@ -51,10 +51,18 @@
 .breakdown-table {
     margin-top: 10px;
     max-width: 800px;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+.breakdown-table td {
+    border: 1px solid #ccc;
+    padding: 5px;
 }
 
 .component {
     font-size: 1.3em;
+    white-space: nowrap;
 }
 
 .note {
@@ -72,5 +80,5 @@
 }
 
 .explanation {
-    padding-left: 5px;
+    padding-left: 8px;
 }

@@ -19,8 +19,8 @@ function createTranscriptHTMLString(content) {
         item.breakdown.forEach(component => {
             html += `
                             <tr>
-                                <td>
-                                   <ruby class="component">${component.term}<rt class="pinyin">${component.pinyin}</rt></ruby>
+                                <td class="component">
+                                   <ruby>${component.term}<rt class="pinyin">${component.pinyin}</rt></ruby>
                                    <!-- <span class="component">${component.term}</span><br>
                                    <span >(${component.pinyin})</span></td> -->
                                 <td class="explanation">${component.explanation}</td>
