@@ -50,7 +50,7 @@
 
 .breakdown-table {
     margin-top: 10px;
-    max-width: 800px;
+    max-width: 650px;
     border: 1px solid #ccc;
     border-collapse: collapse;
 }
@@ -67,12 +67,12 @@
 
 .note {
     margin-top: 10px;
-    max-width: 800px;
+    max-width: 650px;
 }
 
 .word-by-word {
     margin-top: 10px;
-    max-width: 800px;
+    max-width: 650px;
 }
 
 .pinyin rt {
