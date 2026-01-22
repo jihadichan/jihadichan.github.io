@@ -137,8 +137,9 @@ async def call_gemini_many(
     max_workers: int = 5,
     retries: int = 3,
     initial_backoff: float = 1.0,
-) -> List[str]:
-    """Call Gemini for each prompt concurrently, returning raw text outputs.
+    validate_json: bool = False,
+) -> List[Any]:
+    """Call Gemini for each prompt concurrently, returning parsed JSON or raw text.
 
     Uses google.genai sync API inside a thread pool.
     """
@@ -155,13 +156,13 @@ async def call_gemini_many(
     loop = asyncio.get_event_loop()
     executor = ThreadPoolExecutor(max_workers=max_workers)
 
-    async def one_prompt(prompt: str, idx: int) -> str:
+    async def one_prompt(prompt: str, idx: int) -> Any:
         import time
         delay = initial_backoff
         last_exc: Optional[Exception] = None
         for attempt in range(retries + 1):
             try:
-                def _run() -> str:
+                def _run() -> Any:
                     start = time.perf_counter()
                     # Prefer the Models API; fall back to Responses if needed.
                     try:
@@ -199,11 +200,16 @@ async def call_gemini_many(
 
                     elapsed_ms = int((time.perf_counter() - start) * 1000)
                     _debug(f"Received response for story {idx} (attempt {attempt+1}/{retries+1}) in {elapsed_ms} ms; {len(text_out)} chars")
+
+                    if validate_json:
+                        # This will raise ValueError if parsing fails, triggering a retry
+                        return extract_json(text_out)
                     return text_out
 
                 return await loop.run_in_executor(executor, _run)
             except Exception as e:
                 last_exc = e
+                _debug(f"Attempt {attempt+1} failed for story {idx}: {e}")
                 if attempt >= retries:
                     break
                 await asyncio.sleep(delay)
@@ -269,29 +275,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     _debug(f"Found {len(stories)} stories. Submitting to Gemini concurrently (max_workers={max_workers})...")
 
     # Run event loop
-    outputs = asyncio.run(
+    results = asyncio.run(
         call_gemini_many(
             prompts,
             model_name=model_name,
             api_key=api_key,
             max_workers=max_workers,
             retries=retries,
+            validate_json=True,
         )
     )
 
     merged: List[Any] = []
-    for i, text in enumerate(outputs):
+    for i, piece in enumerate(results):
         # Insert a delimiter marker at the start of each story's block
         merged.append({"story_start": True})
         _debug(f"Inserted story_start marker for story {i}")
-        try:
-            piece = extract_json(text)
-        except Exception as e:
-            # Store diagnostic entry to preserve position and continue
-            _debug(f"Warning: JSON parse failed for story {i}: {e}")
-            diag = {"error": str(e), "raw": text}
-            merged.append({"story_index": i, "result": diag})
-            continue
         items = normalize_piece(piece)
         merged.extend(items)
         _debug(f"Merged story {i}: {len(items)} item(s)")
