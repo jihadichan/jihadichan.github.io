@@ -1,17 +1,29 @@
 function createTranscriptHTMLString(content) {
-    let html = '<div>';
+    let html = '';
+    let isFirst = true;
 
     content.forEach((item, index) => {
 
+        if (item.story_start) {
+            if (!isFirst) {
+                html += '</div>'
+            }
+            isFirst = false;
+            html += `<div class="desc">`
+            return html;
+        }
+
+        const mandarin = item.transcript ? item.transcript.mandarin : item.mandarin;
+        const english = item.transcript ? item.transcript.english : item.english;
 
         html += `
-          <div>
+            <div>
             <div class="t0 text_size simsun">
-                <span>${item.transcript.mandarin}</span>
+                <span>${mandarin}</span>
             </div>
             <div class="t2 text_size" style="display:none;">
                 <span>
-                    <span class="english">${item.transcript.english}</span><br>
+                    <span class="english">${english}</span><br>
                     <table class="breakdown-table">
                         <tbody>`;
 
@@ -41,10 +53,10 @@ function createTranscriptHTMLString(content) {
                     </div>`;
         }
 
-        html += '</div>';
+        html += '</div></div>';
     });
 
-    html += '</div></div>';
+    html += '</div>';
     return html;
 }
 

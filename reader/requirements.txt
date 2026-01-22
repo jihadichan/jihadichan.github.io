@@ -1,0 +1,4 @@
+# Python dependencies for the reader project
+
+# New official Google Gemini SDK used by scripts/translate_stories.py
+google-genai>=0.3.0

@@ -1,0 +1,80 @@
+Translate the given text in `<story>` and give a breakdown and explanations.
+Format your response as a JSON object with the exact structure specified below.
+The JSON must include a component breakdown with short explanations and a note explaining important concepts in the sentence.
+Also include a word-by-word translation in the format `让 (Let) 我们 (us) 吃 (eat) 午饭 (lunch).`.
+
+IMPORTANT:
+- Make sure to replicate the JSON structure precisely with all specified fields in the given order.
+
+Example input:
+```
+小猫到处找。
+小奶牛也到处找。
+```
+
+
+Expected output JSON structure:
+```json
+[
+{
+    "mandarin": "小猫到处找。",
+    "english": "The little cat is looking everywhere.",
+    "breakdown": [
+        {
+            "term": "小猫",
+            "pinyin": "xiǎo māo",
+            "explanation": "A noun phrase meaning \"little cat\" or \"kitten.\" 小 (xiǎo) is an adjective meaning \"small\" or \"little.\" 猫 (māo) is a noun meaning \"cat.\""
+        },
+        {
+            "term": "到处",
+            "pinyin": "dào chù",
+            "explanation": "An adverb meaning \"everywhere\" or \"all over the place.\" It indicates the scope or range of the action."
+        },
+        {
+            "term": "找",
+            "pinyin": "zhǎo",
+            "explanation": "A verb meaning \"to look for,\" \"to search,\" or \"to seek.\" It is the core action of the sentence."
+        }
+    ],
+    "note": "The sentence follows the standard Chinese word order: Subject (小猫) + Adverb (到处) + Verb (找). The present continuous tense (\"is looking\") is implied by context, though the particle 在 (zài) is not explicitly written.",
+    "word_by_word": "小猫 (Little cat) 到处 (everywhere) 找 (looks for)."
+},
+{
+    "mandarin": "小奶牛也到处找。",
+    "english": "The little cow is also looking everywhere.",
+    "breakdown": [
+        {
+            "term": "小",
+            "pinyin": "xiǎo",
+            "explanation": "An adjective meaning \"small\" or \"little.\""
+        },
+        {
+            "term": "奶牛",
+            "pinyin": "nǎi niú",
+            "explanation": "A noun meaning \"cow\" (specifically a dairy cow). 奶 (nǎi) means \"milk,\" so it's a \"milk cow.\""
+        },
+        {
+            "term": "也",
+            "pinyin": "yě",
+            "explanation": "An adverb meaning \"also\" or \"too.\" It indicates that the action is in addition to a previously mentioned one."
+        },
+        {
+            "term": "到处",
+            "pinyin": "dào chù",
+            "explanation": "An adverb meaning \"everywhere\" or \"all over the place.\""
+        },
+        {
+            "term": "找",
+            "pinyin": "zhǎo",
+            "explanation": "A verb meaning \"to look for,\" \"to search,\" or \"to seek.\""
+        }
+    ],
+    "note": "Subject (小奶牛) + Adverb (也) + Adverb (到处) + Verb (找). The implied present continuous aspect (is looking) is understood from context.",
+    "word_by_word": "小 (little) 奶牛 (cow) 也 (also) 到处 (everywhere) 找 (looks for)."
+}
+]
+```
+
+<story>
+#REPLACE_THIS#
+</story>
